@@ -1,0 +1,37 @@
+RUNTIME TASKS:
+
+  - For the InfoRegion backgrounds, look into seeing if Unity has any premade asset UI packages that
+    can create squares with rounded edges. The process we have now is annoying and time consuming. 
+
+  - EDIT/DELETE Block
+    change the background to something solid white with some curve to it.
+    the text block
+    - if the trashcan is held for 2 seconds, then the info card flashes red and then deletes itself.
+    - if the pencil is pressed then we go to the account creation screen where it autopopulates with
+      then info card data, and a save will override that infocard.
+
+  - Search function
+    We want to be able to search for a specific account, so we should implement a search bar and 
+    have it start hiding buttons based on the search, so if they type anything, like a 'b' then 
+    only buttons matching the first letter will be there.
+    
+  - LIGHT MODE
+    may just be a really cool shader effect that changes all colors on screen.
+
+  - Zip Functionality
+    This should be primarily a Chat-GPT thing, but we just need to know how to export our save file
+    and convert it into a zip that is then downloaded by the local client.
+
+
+
+
+GRAPHIC TASKS:
+  - Change color of fields to red if they are required to create an account information (or add a red *)
+  - transitions for pages (copy off of Astro's Menu page)
+  - animations for edit/delete buttons
+  - settings pane fade animations
+  - slide reveal animation for pressing info card
+  - icon animations?
+  - animations for incorrect pin
+  - adding *'s after a .5f or when the user enters another pin
+  - Change build version to 1.0.0

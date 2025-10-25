@@ -12,7 +12,7 @@ public static class SaveSystem
         Debug.Log($"[SaveSystem]: Data saved to {savePath}");
     }
 
-    public static void LoadDataFromFile()
+    public static SaveData LoadDataFromFile()
     {
         if (!File.Exists(savePath))
         {

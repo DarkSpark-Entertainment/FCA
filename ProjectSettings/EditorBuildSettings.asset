@@ -5,7 +5,17 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/Pin Pad.unity
+    guid: c0bb518d86c227f4ab6053610a34c664
+  - enabled: 1
+    path: Assets/Scenes/Accounts.unity
+    guid: dbd8c8573d1514642937a154c14107d3
+  - enabled: 1
+    path: Assets/Scenes/Account Creation.unity
+    guid: b8a381ee3e8af974abf6592f6696f3ca
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0

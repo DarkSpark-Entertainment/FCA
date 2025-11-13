@@ -1,7 +1,7 @@
 # FCA
 The Filing Cabinet for Accounts application is meant to store credentials related to accounts across the board, creating a streamlined experience searching and fetching pesky passwords or pins for one of the hundred accounts you have to make nowadays.
 
-# Day 1: Scoping out the project
+# Day 1: Scoping out the project (10/25/2025)
 
 Expected goals are to create the rough abstract of the project, and get the outline going as well as establishing the repository, the Unity project, and the baseline
 for how the program is expected to behave for the user. Below is the projected functionality of the file structure:
@@ -23,7 +23,7 @@ for how the program is expected to behave for the user. Below is the projected f
 Additionally there will be a pin code to get into the app that has to be brought into the save system somehow, and potentially it would be nice to add the feature of fingerprint
 verification to access the app rather than just a pin option.
 
-# Day 2: Save System and Initial Front-End
+# Day 2: Save System and Initial Front-End (10/27/2023)
 
 Expected goals are to create the three main pages (Pin Pad, Accounts, and Account Creation). Then, add the necessary buttons on the Accounts and Account Creation screens:
 
@@ -62,3 +62,25 @@ These are to be organized later:
 - The animation for creating an account will fade out the button and take a white circle expanding to cover the whole screen, scene change, and then a white circle shrinking until it covers the area for the back button on the account creation screen, and that button then fades in.
 - When pressed and held down on a file, a small settings pane appears that has the options "Edit", "Move to..." and "Delete"
 - The username and password are required fields, but the username can also be opted for an email instead, so if the user type an email in, it will make the username not required any longer, and vice versa.
+
+# Day 3: Save System Overhaul and Organizing Script Logic (11/13/2023)
+
+So, none of the layout goals were met because I was interrupted a while back during a dev session and then was hit with a wave of work so overwhelming that I started falling behind even in basic chores around the house. With that being said, getting back onto the horse was not easy as the state of the project was a mess due to me throwing around several ideas during the last development day. Below is what was accomplished on the actual "Day 2" but is being put as Day 3 due to the time skip.
+
+## The Changes Between Day 2 and 3
+
+The SaveSystem was overhauled to store a static instance of SaveData, called CurrentData, which will act as the only instance throughout the project. Additionally to support the totality of its new static behavior--and to avoid unnecessary called to LoadDataFromFile (now just called Load())-- there is a new 'Core' script called Initialize which calls Load() to essentially jumpstart the application.
+
+SaveData was only slightly tweaked, but the functionality has been changed from Day 1's initial concept. No longer are we attempting to add tags to the variables, but opted to just have Dictionary's to store the data in a lovely key-value pair fashion. Additionally, I decided to keep the folder_id logic only because it is a helpful tool for idiot proofing the folder creation later.
+
+Calls in SaveSystem were simplified from their overly verbose nature to simply Save, Load, and Delete, with comments added to describe them instead. Aids heavily in readability.
+
+Speaking of readability, I also decided to enforce a naming convention:
+*Classes, Methods/Functions, Folders/Scripts, and Instance's of a Class*: `UpperCamelCase`
+*Instance Variables*: `lower_snake_case`
+*Static Variables*: `Upper_Snake_Case`
+*Const/Readonly Variables*: `ALL_CAPS_SNAKE_CASE`
+
+Which is fairly new for my standards, but I want to get into better care for my naming conventions so that it's easier to read the code without 'reading' the code, ya know?
+
+SaveDataManager got refactored to SaveDataController and was organized in a new series of folders `Core`, `Data`, and `UI`. It belongs in `UI` along with another new file AccountFormController. These scripts handle GameObject logic and will be interacting directly with users (hence the name Controller), SaveData and SaveSystem both deal directly with memory, so they get put with `Data`, and Initialize and SceneContext (another new file that stores literally just a boolean and key to determine whether an account is being created or edited) are in `Core` due to them being fundamental to background logic. Last one is a bit of a stretch but works for now.

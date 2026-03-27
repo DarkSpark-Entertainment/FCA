@@ -1,6 +1,12 @@
 # FCA
 The Filing Cabinet for Accounts application is meant to store credentials related to accounts across the board, creating a streamlined experience searching and fetching pesky passwords or pins for one of the hundred accounts you have to make nowadays.
 
+## Naming Conventions and Syntax:
+*Classes, Methods/Functions, Folders/Scripts, and Instance's of a Class*: `UpperCamelCase`
+*Instance Variables*: `lower_snake_case`
+*Static Variables*: `Upper_Snake_Case`
+*Const/Readonly Variables*: `ALL_CAPS_SNAKE_CASE`
+
 # Day 1: Scoping out the project (10/25/2025)
 
 Expected goals are to create the rough abstract of the project, and get the outline going as well as establishing the repository, the Unity project, and the baseline
@@ -84,3 +90,120 @@ Speaking of readability, I also decided to enforce a naming convention:
 Which is fairly new for my standards, but I want to get into better care for my naming conventions so that it's easier to read the code without 'reading' the code, ya know?
 
 SaveDataManager got refactored to SaveDataController and was organized in a new series of folders `Core`, `Data`, and `UI`. It belongs in `UI` along with another new file AccountFormController. These scripts handle GameObject logic and will be interacting directly with users (hence the name Controller), SaveData and SaveSystem both deal directly with memory, so they get put with `Data`, and Initialize and SceneContext (another new file that stores literally just a boolean and key to determine whether an account is being created or edited) are in `Core` due to them being fundamental to background logic. Last one is a bit of a stretch but works for now.
+
+# Day 4: User-Cases and General Development Planning (3/26/2026)
+
+Per the usual, it's been a while. Getting back into the swing of things was a bit interesting as I had decided my initial strategy wasn't the most intuitive. Taking a step back it came to my attention
+that it may be in my best interest to utilize User Stories as a way of organizing my thoughts for this project as there will be many difficult branches, so we need a strong foundation. Below are my 
+mostly filtered notes for 'User Stories' formed as Use Cases that elaborate on the action the user can take, and explaining what happens from the front end to the back end, including edge-cases:
+
+## User Stories (sort of)
+
+`INITIALIZATION`
+- Pin Pad Scene is displayed
+- Load Accounts scene in tandem via a coroutine (SaveSystem.Load())
+- populate accounts listing
+  + Use SaveData.folders[0-N] to first populate folders in scroll view
+  + SaveData.folders[0-N][0-N] is used to create and hide Account Cards (gameobject with information filled out for the related account)
+  + Use SaveData.accounts[0-N] to populate the remaining Accounts that are not in a folder
+- Wait for user to input PIN or use biometric
+- Move to pre-loaded Accounts scene
+
+`USE CASE #1 | FOLDER IS ENGAGED`
+- Hide all other game objects via some kind of AccountListingController.HideAll()
+- Reveal all accounts related to folder that was engaged. 
+- put folder name in search bar (leave operable)
+- EDGE CASES
+  + 1 | USER ENGAGES SEARCH BAR
+    - when search is engaged it should state 'Searching [Folder Name]...' and override Search Bar's base script to search exclusively that folder.
+    - when search is cleared, bring back folder name (utilize TMPro placeholder text)
+    - repopulate accounts in folder as needed
+
+`USE CASE #2 | ACCOUNT IS ENGAGED`
+- Expands the account card revealing all user information.
+- All fields (save for the security questions) are copy and pasteable via a single tap.
+- If the user presses on the account name it will recollapse hiding the information.
+- Password and security questions are censored until they are held-pressed for 2 or more seconds revealing the information. 
+  + If the password is tapped, it copies it, if its held then it behaves as described above.
+- EDGE CASES
+  + 1 | USER EXPANDS ANOTHER ACCOUNT/FOLDER
+    - Automatically collapse the previously engaged account to avoid readability issues.
+
+`USE CASE #3 | ACCOUNT IS HELD`
+- If an Account GameObject is held for 2 or more seconds, 5 buttons will populate next to where the user pressed
+- Create Folder
+  + Will shade the background and bring a name textfield to fill out as well as a checkmark to mark creation
+  + when checkmark is pressed, whatever was in the textfield will be used to create a folder object, assign its name, and the account to its listing.
+  + The Folder will populate in the main listing and the account will be hidden unless that folder is engaged.
+    - Should we automatically go into that folder? functionally doesnt make sense but *feels* intuitive.
+- Move Folders
+  + Shades the background and provides a dropdown that has all folder names
+  + Checkmark is populated next to the dropdown, once pressed the account will be moved into that folder and removed from any previous folder it was in.
+- Edit Account
+  + will bring the user to the account creation page
+  + fills out form automatically with previously stored information.
+  + user can make changes freely, changes are automatically stored in local cache but nothing changes until they press the SAVE button.
+  + User will be brought back to the main screen with account opened where they were (including if they were in a folder)
+- Delete Account
+  + Brings a warning panel up that confirms deletion
+  + user can either back out using the "Nevermind..." button, or confirm with "Delete." button.
+  + Upon deletion the AccountGame object is purged from listing, taken out of SaveData.Accounts, removed from any folders containing its ID, and then SaveSystem.Save() is engaged.
+- Exit
+  + A small circle with an 'X' inside allows user to back out of selection entirely.
+
+`USE CASE #4 | FOLDER IS HELD`
+- If a Folder GameObject is held for 2 or more seconds, 3 buttons populate next to where the user held down.
+- Rename Folder
+  + Shades the background and provides a textfield and check mark
+  + Textfield is auto-populated with the current name
+  + When check mark is pressed, whatever is inside the textfield is saved as the new name.
+    - SaveData.Folders is then updated, as well as the GameObject associated with this folder.
+- Delete Folder
+  + Same as delete account, brings a warning panel confirming deletion, "Nevermind..." and "Delete." are provided.
+- Exit
+  + A small circle with an 'X' inside allows user to back out of selection entirely.
+
+
+## Additional Features
+
+Additionally, a few more features have been baked in the oven and I wish to include them:
+- Biometric access is becoming more and more of a must.
+- Press and Hold Override
+  + This is tricky, an Android user can press and hold on a textfield and some options populate for pasting, select all text, etc.
+  + I want to add buttons to that field OUTSIDE OF THE APP, meaning that 
+    - FCA has to be allowed to run in the background at all times waiting for the user input override.
+    - Permissions must be given
+    - FCA must be allowed to add onto the button listing in some way or another.
+  + What these buttons will do?
+    - Add a Search button with FCA logo nearby to show the user what it is.
+    - when engaged the user can simply search the account they need, and it will bring a tiny info
+      card out that has the username and (censored) password, which the user can press to copy and then 
+      paste into the textfield.
+
+## The Changes of Day 4
+
+SaveData was refactored, opting to go for intentional redundancy in the data handling. While the GUID's made for the accounts and folders
+are used as the keys now in SaveData's dictionaries, they are also stored in the data types themselves. This is because they will be used
+independently to the dictionary to create the associated GameObjects. Additionally, it allows the objects to become entities, meaning that
+if we wanted to make independent changes to it, we can, and can easily find where it is associated and make edits, adjustments, and save 
+at a much faster pace.
+
+I then debugged AccountFormController, attempting to understand my pseudo-code that was half-baked thoughts. Making a breakthrough with understandings
+of the syntactic sugar that is lambda expressions, I managed to get the compiler errors to cease and left notes for me to continue referencing to 
+reinforce the use of AddListener() as well as Unity functions as a whole (such as onEndEdit).
+
+Going forward for day 5 is listed below:
+
+- Hook up Save() to the SaveSystem
+- Replace all scripts that are missing on the SceneManager
+- Hook up the button and text fields to the new scripts
+- add print outs for debug purposes in AccountFormController and SaveDataController
+- Add remaining fields for testing
+- Plug those fields into the script and test the automation process
+- Begin developing methods inside of SaveDataController
+
+After those are implemented we can move on to some of the next planning phases. UI for this project will be put on hold until the major functions are operational,
+which includes the pin pad screen as well as the saving, editing, and deleting of accounts and their respective folders. Then we move on to the search features, and then 
+the ZIP file feature, and FINALLY we can move on to the more technical and advanced sections (e.g. biometric login, use of app outside of itself, and press and hold features.)
+
+After all that, we can move onto UI and then porting it onto a phone.

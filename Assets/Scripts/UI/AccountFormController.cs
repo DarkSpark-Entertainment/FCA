@@ -7,10 +7,12 @@ public class AccountFormController : MonoBehaviour
 {
     // ============[ Variables ]============ \\
 
-    public AccountData Account; // used to store the organization name and account_information fields
+    private AccountData Account; // used to store the organization name and account_information fields
 
     [SerializeField]
     public TMP_InputField[] input_fields;
+    public TMP_InputField DisplayName; // Denoted as display_name for accounts
+    public TMP_InputField FolderName; // If a value is assigned, will trigger the creation of a folder on a SaveAccountData action
 
 
     // ============[ System ]============ \\
@@ -32,11 +34,21 @@ public class AccountFormController : MonoBehaviour
     
     public void UpdateAccountData(string label, string information)
     {
+       Debug.Log($"[AccountFormController]: Label- {label} Information- {information}");
        Account.account_information[label] = information;
     }
 
-    public void Save()
+    public void SaveAccountData()
     {
+        // Check if FolderName is empty, if not, cross check if the folder already exists.
+
+        // if folder exists, assign its id to this account
+
+        // if not, create new folder
+
+        // Assign DisplayName
+
+        // Create account (already saves on creation)
         
     }
 }

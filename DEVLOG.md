@@ -121,4 +121,18 @@ user stories into their own file that I can come back to more frequently as the 
 
 Second thing was to address my todo list left on Day 4.
 
+- ~~Hook up Save() to the SaveSystem~~ [DONE]
+- ~~Replace all scripts that are missing on the SceneManager~~ [DONE]
+- Hook up the button and text fields to the new scripts
+- add print outs for debug purposes in AccountFormController and SaveDataController
+- Add remaining fields for testing
+- Plug those fields into the script and test the automation process
+- Begin developing methods inside of SaveDataController
+
+For today, that is fine. It's the weekend and I wanted to take it easier. But so I don't lose train of thought:
+- AccountFormController was a bit hard because we have differing fields from the automated process, so those had to be handled differently
+- Creating/assigning a folder is a bit challenging of a concept as it has to be done in two places and I refuse to have too much redundant code, some food for thought.
+  + For now, we will assume that the control will be a drop-down that if there is no folders present will be defaulted to a text field that if filled out will generate a folder automatically.
+- SaveDataController I had initially thought would be plugged into the SceneManager, but at this current junction, it will not, and remain a script only referenced by other scripts.
+
 
